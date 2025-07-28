@@ -17,12 +17,4 @@ public class SwaggerConfig {
                         .description("REST API for managing books and their copies")
                         .version("1.0"));
     }
-
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("library")
-                .pathsToMatch("/api/**")
-                .build();
-    }
 }

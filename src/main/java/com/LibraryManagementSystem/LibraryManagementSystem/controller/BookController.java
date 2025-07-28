@@ -2,11 +2,13 @@ package com.LibraryManagementSystem.LibraryManagementSystem.controller;
 
 import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookCopyDTO;
 import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookDTO;
+import com.LibraryManagementSystem.LibraryManagementSystem.dto.UpdateBookDTO;
 import com.LibraryManagementSystem.LibraryManagementSystem.service.BookCopyService;
 import com.LibraryManagementSystem.LibraryManagementSystem.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class BookController {
     @GetMapping
     public List<BookDTO> getAll(Pageable pageable) {
 
-        return bookService.getAllBooks(pageable).getContent();
+        return bookService.getAllBooksWithoutCopies(pageable).getContent();
     }
 
     @GetMapping("/{id}")
@@ -38,11 +40,12 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public BookDTO updateBook(@PathVariable Long id, @RequestBody BookDTO dto) {
+    public BookDTO updateBook(@PathVariable Long id, @RequestBody UpdateBookDTO dto) {
         return bookService.updateBook(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable Long id) {
 
         bookService.deleteBook(id);

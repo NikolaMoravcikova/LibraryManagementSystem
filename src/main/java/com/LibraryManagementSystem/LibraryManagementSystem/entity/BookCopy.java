@@ -8,9 +8,6 @@ import lombok.*;
 @Table(name="book_copies")
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
-@ToString
 @Builder
 public class BookCopy {
 
