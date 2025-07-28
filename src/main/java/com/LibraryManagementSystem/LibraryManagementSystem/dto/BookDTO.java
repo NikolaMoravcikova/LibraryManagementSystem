@@ -1,21 +1,17 @@
 package com.LibraryManagementSystem.LibraryManagementSystem.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class BookResponseDTO {
+public class BookDTO {
     private Long id;
     private String title;
     private String author;
     private String isbn;
     private Integer publishedYear;
-    private List<BookCopyResponseDTO> copies;
+    private List<BookCopyDTO> copies;
 }

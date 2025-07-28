@@ -23,5 +23,5 @@ public class BookCopy {
     private Book book;
 
     @Column(nullable = false)
-    private Boolean available = true;
+    private boolean available = true;
 }

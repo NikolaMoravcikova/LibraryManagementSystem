@@ -1,15 +1,13 @@
 package com.LibraryManagementSystem.LibraryManagementSystem.service;
 
-
-import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookRequestDTO;
-import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookResponseDTO;
-
-import java.util.List;
+import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    List<BookResponseDTO> getAllBooks();
-    BookResponseDTO getBookById(Long id);
-    BookResponseDTO createBook(BookRequestDTO dto);
-    BookResponseDTO updateBook(Long id, BookRequestDTO dto);
+    Page<BookDTO> getAllBooks(Pageable pageable);
+    BookDTO getBookById(Long id);
+    BookDTO createBook(BookDTO dto);
+    BookDTO updateBook(Long id, BookDTO dto);
     void deleteBook(Long id);
 }

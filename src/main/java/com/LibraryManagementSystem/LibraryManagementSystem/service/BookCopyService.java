@@ -1,13 +1,10 @@
 package com.LibraryManagementSystem.LibraryManagementSystem.service;
 
-import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookCopyRequestDTO;
-import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookCopyResponseDTO;
-
-
+import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookCopyDTO;
 import java.util.List;
 
 public interface BookCopyService {
-    List<BookCopyResponseDTO> getCopiesByBookId(Long bookId);
-    BookCopyResponseDTO addCopy(Long bookId);
-    BookCopyResponseDTO updateCopyAvailability(Long bookId, Long copyId, BookCopyRequestDTO dto);
+    List<BookCopyDTO> getCopiesByBookId(Long bookId);
+    BookCopyDTO addCopy(Long bookId);
+    BookCopyDTO updateAvailability(Long bookId, Long copyId, boolean available);
 }

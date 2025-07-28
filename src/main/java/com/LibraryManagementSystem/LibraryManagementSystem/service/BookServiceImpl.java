@@ -1,53 +1,75 @@
 package com.LibraryManagementSystem.LibraryManagementSystem.service;
 
-import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookRequestDTO;
-import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookResponseDTO;
+import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookCopyDTO;
+import com.LibraryManagementSystem.LibraryManagementSystem.dto.BookDTO;
 import com.LibraryManagementSystem.LibraryManagementSystem.entity.Book;
 import com.LibraryManagementSystem.LibraryManagementSystem.exception.NotFoundException;
-import com.LibraryManagementSystem.LibraryManagementSystem.mapper.BookCopyMapper;
-import com.LibraryManagementSystem.LibraryManagementSystem.mapper.BookMapper;
 import com.LibraryManagementSystem.LibraryManagementSystem.repository.BookRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private final BookRepo bookRepo;
-    private final BookMapper bookMapper;
-    private final BookCopyMapper copyMapper;
 
-    public List<BookResponseDTO> getAllBooks() {
-        return bookMapper.toDtoList(bookRepo.findAll());
+    @Override
+    public Page<BookDTO> getAllBooks(Pageable pageable) {
+
+       return bookRepo.findAll(pageable).map(this::mapToDTO);
     }
 
-    public BookResponseDTO getBookById(Long id) {
+    @Override
+    public BookDTO getBookById(Long id) {
         Book book = bookRepo.findById(id).orElseThrow(() -> new NotFoundException("Book not found"));
-        BookResponseDTO dto = bookMapper.toDto(book);
-        dto.setCopies(copyMapper.toDtoList(book.getCopies()));
-        return dto;
+        return mapToDTO(book);
     }
 
-    public BookResponseDTO createBook(BookRequestDTO dto) {
-        Book book = bookMapper.toEntity(dto);
-        return bookMapper.toDto(bookRepo.save(book));
+    @Override
+    public BookDTO createBook(BookDTO dto) {
+        Book book = mapToEntity(dto);
+        return mapToDTO(bookRepo.save(book));
     }
 
-    public BookResponseDTO updateBook(Long id, BookRequestDTO dto) {
+    @Override
+    public BookDTO updateBook(Long id, BookDTO dto) {
         Book book = bookRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
-        if (dto.getTitle() != null) book.setTitle(dto.getTitle());
-        if (dto.getAuthor() != null) book.setAuthor(dto.getAuthor());
-        if (dto.getIsbn() != null) book.setISBN(dto.getIsbn());
-        if (dto.getPublishedYear() != null) book.setPublishedYear(dto.getPublishedYear());
-        return bookMapper.toDto(bookRepo.save(book));
+        book.setTitle(dto.getTitle());
+        book.setAuthor(dto.getAuthor());
+        book.setISBN(dto.getIsbn());
+        book.setPublishedYear(dto.getPublishedYear());
+        return mapToDTO(bookRepo.save(book));
     }
 
+    @Override
     public void deleteBook(Long id) {
         bookRepo.deleteById(id);
+    }
+
+    private BookDTO mapToDTO(Book book) {
+        return BookDTO.builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .author(book.getAuthor())
+                .isbn(book.getISBN())
+                .publishedYear(book.getPublishedYear())
+                .copies(book.getCopies().stream()
+                        .map(c -> BookCopyDTO.builder().id(c.getId()).available(c.isAvailable()).build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
+    private Book mapToEntity(BookDTO dto) {
+        return Book.builder()
+                .title(dto.getTitle())
+                .author(dto.getAuthor())
+                .ISBN(dto.getIsbn())
+                .publishedYear(dto.getPublishedYear())
+                .build();
     }
 }
