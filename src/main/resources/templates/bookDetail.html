@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book details</title>
+</head>
+<body>
+<h1>Book details</h1>
+<p><strong>Title:</strong> <span th:text="${book.title}"></span></p>
+<p><strong>Author:</strong> <span th:text="${book.author}"></span></p>
+<p><strong>ISBN:</strong> <span th:text="${book.isbn}"></span></p>
+<p><strong>Published year:</strong> <span th:text="${book.publishedYear}"></span></p>
+
+<h3>Copies</h3>
+<form th:action="@{|/books/${book.id}/copies/add|}" method="post">
+    <button type="submit">+ Add copy</button>
+</form>
+<ul>
+    <li th:each="copy : ${book.copies}">
+        ID: <strong th:text="${copy.id}"></strong> —
+        <span th:text="${copy.available} ? 'True' : 'False'"></span>
+        <form th:action="@{|/books/${book.id}/copies/${copy.id}/toggle|}" method="post" style="display:inline">
+            <button type="submit">Change availability</button>
+        </form>
+    </li>
+</ul>
+<hr/>
+<a th:href="@{|/books/${book.id}/edit|}">Update book</a>
+<br/>
+<a href="/books">← Back to list</a>
+</body>
+</html>
